@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{74D39F0B-C4B3-42FD-B706-AC5BE442B468}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Packages\OpenBusiness.Wizards.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="OpenBusiness_Wizards">
+        <MSBuild Projects="Packages\OpenBusiness.Wizards.dproj"/>
+    </Target>
+    <Target Name="OpenBusiness_Wizards:Clean">
+        <MSBuild Projects="Packages\OpenBusiness.Wizards.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OpenBusiness_Wizards:Make">
+        <MSBuild Projects="Packages\OpenBusiness.Wizards.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="OpenBusiness_Wizards"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="OpenBusiness_Wizards:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="OpenBusiness_Wizards:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
