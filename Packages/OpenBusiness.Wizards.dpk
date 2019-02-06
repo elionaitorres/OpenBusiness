@@ -1,0 +1,43 @@
+package OpenBusiness.Wizards;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  designide;
+
+contains
+  OpenBusiness.Lib.IOTA.Creators in '..\Lib\OpenBusiness.Lib.IOTA.Creators.pas',
+  OpenBusiness.Lib.IOTA.Utils in '..\Lib\OpenBusiness.Lib.IOTA.Utils.pas',
+  OpenBusiness.Wizards.Base in '..\Lib\Wizards\OpenBusiness.Wizards.Base.pas',
+  OpenBusiness.Wizards.Forms.FormWizard in '..\Lib\Wizards\OpenBusiness.Wizards.Forms.FormWizard.pas',
+  OpenBusiness.Wizards.Forms in '..\Lib\Wizards\OpenBusiness.Wizards.Forms.pas',
+  OpenBusiness.Wizards.Informations in '..\Lib\Wizards\OpenBusiness.Wizards.Informations.pas',
+  OpenBusiness.Wizards.Register in '..\Lib\Wizards\OpenBusiness.Wizards.Register.pas';
+
+end.
