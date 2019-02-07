@@ -73,7 +73,7 @@ type
 implementation
 
 uses
- System.SysUtils,
+  System.SysUtils,
   OpenBusiness.Lib.IOTA.Utils;
 
 function AddDelphiCategory(CategoryID, CategoryCaption: string): IOTAGalleryCategory;
