@@ -3,11 +3,7 @@ unit OpenBusiness.Wizards.Informations;
 interface
 
 uses
-  ToolsAPI, Windows, Graphics, SysUtils, DesignIntf;
-
-const
-  ICON_SPLASH = 'SPLASHICON';
-  ICON_ABOUT = 'ABOUTICON';
+  ToolsAPI, Windows, SysUtils, DesignIntf;
 
 var
   AboutBoxServices: IOTAAboutBoxServices;
@@ -26,13 +22,13 @@ implementation
 
 procedure RegisterSplashScreen;
 begin
-  SplashScreenServices.AddPluginBitmap(resPackageName, LoadBitmap(HInstance,ICON_SPLASH), False, resLicense);
+  SplashScreenServices.AddPluginBitmap(resPackageName, LoadBitmap(HInstance, 'SPLASHICON'), False, resLicense);
 end;
 
 procedure RegisterAboutBox;
 begin
   if Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices) then
-    AboutBoxIndex := AboutBoxServices.AddPluginInfo(resAboutTitle, resAboutCopyright + #13#10#13#10 + resAboutDescription, LoadBitmap(HInstance, ICON_ABOUT), False, resLicense);
+    AboutBoxIndex := AboutBoxServices.AddPluginInfo(resAboutTitle, resAboutCopyright + #13#10#13#10 + resAboutDescription, LoadBitmap(HInstance, 'ABOUTICON'), False, resLicense);
 end;
 
 procedure UnregisterAboutBox;

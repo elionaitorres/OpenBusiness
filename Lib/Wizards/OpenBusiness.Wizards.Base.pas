@@ -46,7 +46,7 @@ end;
 
 function TOpenBusinessWizard.GetDesigner: string;
 begin
-  Result := dVCL;
+  Result := dFMX;
 end;
 
 function TOpenBusinessWizard.GetPersonality: string;
@@ -61,7 +61,7 @@ end;
 
 function TOpenBusinessWizard.GetState: TWizardState;
 begin
-  Result := [];
+  Result := [wsEnabled];
 end;
 
 end.

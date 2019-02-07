@@ -3,7 +3,7 @@ unit OpenBusiness.Lib.IOTA.Utils;
 interface
 
 uses
-  Windows, ToolsAPI;
+  ToolsAPI;
 
   function GetCurrentProject: IOTAProject;
   function GetCurrentProjectGroup: IOTAProjectGroup;
@@ -19,16 +19,16 @@ uses
 
 implementation
 
+uses
+  Windows;
+
 function GetCurrentProject: IOTAProject;
-var
-  ProjectGroup: IOTAProjectGroup;
+var ProjectGroup: IOTAProjectGroup;
 begin
   Result := nil;
   ProjectGroup := GetCurrentProjectGroup;
-
-  if Assigned(ProjectGroup) then
-    if ProjectGroup.ProjectCount > 0 then
-      Result := ProjectGroup.ActiveProject
+  if Assigned(ProjectGroup) and (ProjectGroup.ProjectCount > 0) then
+    Result := ProjectGroup.ActiveProject;
 end;
 
 function GetCurrentProjectGroup: IOTAProjectGroup;
@@ -72,8 +72,7 @@ begin
 end;
 
 function ModuleIsProject(Module: IOTAModule): Boolean;
-var
-  Project: IOTAProject;
+var Project: IOTAProject;
 begin
   Result := False;
   if Assigned(Module) then
@@ -81,8 +80,7 @@ begin
 end;
 
 function ModuleIsProjectGroup(Module: IOTAModule): Boolean;
-var
-  ProjectGroup: IOTAProjectGroup;
+var ProjectGroup: IOTAProjectGroup;
 begin
   Result := False;
   if Assigned(Module) then
@@ -90,8 +88,7 @@ begin
 end;
 
 function ModuleIsTypeLib(Module: IOTAModule): Boolean;
-var
-  TypeLib: IOTATypeLibModule;
+var TypeLib: IOTATypeLibModule;
 begin
   Result := False;
   if Assigned(Module) then
@@ -99,8 +96,7 @@ begin
 end;
 
 function EditorIsFormEditor(Editor: IOTAEditor): Boolean;
-var
-  FormEdit: IOTAFormEditor;
+var FormEdit: IOTAFormEditor;
 begin
   Result := False;
   if Assigned(Editor) then
@@ -108,8 +104,7 @@ begin
 end;
 
 function EditorIsProjectResEditor(Editor: IOTAEditor): Boolean;
-var
-  ProjRes: IOTAProjectResource;
+var ProjRes: IOTAProjectResource;
 begin
   Result := False;
   if Assigned(Editor) then
@@ -117,8 +112,7 @@ begin
 end;
 
 function EditorIsTypeLibEditor(Editor: IOTAEditor): Boolean;
-var
-  TypeLib: IOTATypeLibEditor;
+var TypeLib: IOTATypeLibEditor;
 begin
   Result := False;
   if Assigned(Editor) then
@@ -126,8 +120,7 @@ begin
 end;
 
 function EditorIsSourceEditor(Editor: IOTAEditor): Boolean;
-var
-  SourceEdit: IOTASourceEditor;
+var SourceEdit: IOTASourceEditor;
 begin
   Result := False;
   if Assigned(Editor) then
@@ -135,8 +128,7 @@ begin
 end;
 
 function IsModule(Unk: IUnknown): Boolean;
-var
-  Module: IOTAModule;
+var Module: IOTAModule;
 begin
   Result := False;
   if Assigned(Unk) then

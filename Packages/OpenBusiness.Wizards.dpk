@@ -29,7 +29,8 @@ package OpenBusiness.Wizards;
 
 requires
   rtl,
-  designide;
+  designide,
+  fmx;
 
 contains
   OpenBusiness.Lib.IOTA.Creators in '..\Lib\OpenBusiness.Lib.IOTA.Creators.pas',

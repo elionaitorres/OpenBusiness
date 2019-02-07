@@ -15,7 +15,7 @@ type
     function GetAge: TDateTime;
   end;
 
-  TModuleCreatorFile = class(TBaseCreatorFile)
+  TModuleCreatorSourceFile = class(TBaseCreatorFile)
   private
     FModuleIdent: String;
     FFormIdent: String;
@@ -24,11 +24,13 @@ type
     constructor Create(const ModuleIdent, FormIdent, AncestorIdent: string);
     function GetSource: String; override;
   end;
-
-  TModuleCreatorFileClass = class of TModuleCreatorFile;
+  TModuleCreatorSourceFileClass = class of TModuleCreatorSourceFile;
 
   TBaseCreatorModule = class(TInterfacedObject, IOTACreator, IOTAModuleCreator)
-  public
+  protected
+    // OpenBusiness Implementations
+    function GetImplFile: TModuleCreatorSourceFileClass; virtual;
+    function GetIntfFile: TModuleCreatorSourceFileClass; virtual;
     // IOTACreator
     function GetCreatorType: string; virtual; abstract;
     function GetExisting: Boolean;
@@ -39,7 +41,7 @@ type
     function GetAncestorName: string; virtual;
     function GetImplFileName: string;
     function GetIntfFileName: string;
-    function GetFormName: string; virtual;
+    function GetFormName: string; virtual;      // Verificar...
     function GetMainForm: Boolean;
     function GetShowForm: Boolean;
     function GetShowSource: Boolean;
@@ -47,8 +49,8 @@ type
     function NewImplSource(const ModuleIdent, FormIdent, AncestorIdent: string): IOTAFile; virtual;
     function NewIntfSource(const ModuleIdent, FormIdent, AncestorIdent: string): IOTAFile; virtual;
     procedure FormCreated(const FormEditor: IOTAFormEditor);
-    function GetImplFile: TModuleCreatorFileClass; virtual;
-    function GetIntfFile: TModuleCreatorFileClass; virtual;
+  public
+    // IOTAModuleCreator
     property AncestorName: string read GetAncestorName;
     property FormName: string read GetFormName;
     property ImplFileName: string read GetImplFileName;
@@ -59,17 +61,8 @@ type
   end;
 
   TFormCreatorModule = class(TBaseCreatorModule)
-  public
+  protected
     function GetCreatorType: string; override;
-    function GetAncestorName: string; override;
-  end;
-
-  TDataModuleCreatorModule = class(TBaseCreatorModule)
-  public
-    function GetAncestorName: string; override;
-  end;
-
-  TFrameCreatorModule = class(TBaseCreatorModule)
     function GetAncestorName: string; override;
   end;
 
@@ -80,7 +73,7 @@ type
 implementation
 
 uses
-  System.SysUtils,
+ System.SysUtils,
   OpenBusiness.Lib.IOTA.Utils;
 
 function AddDelphiCategory(CategoryID, CategoryCaption: string): IOTAGalleryCategory;
@@ -90,18 +83,15 @@ var
 begin
   Result := nil;
   Manager := BorlandIDEServices as IOTAGalleryCategoryManager;
-
   if Assigned(Manager) then
   begin
     ParentCategory := Manager.FindCategory(sCategoryDelphiNew);
     if Assigned(ParentCategory) then
-      Result := Manager.AddCategory(ParentCategory, CategoryID,
-        CategoryCaption);
+      Result := Manager.AddCategory(ParentCategory, CategoryID, CategoryCaption);
   end;
 end;
 
-function AddBuilderCategory(CategoryID, CategoryCaption: string)
-  : IOTAGalleryCategory;
+function AddBuilderCategory(CategoryID, CategoryCaption: string): IOTAGalleryCategory;
 var
   Manager: IOTAGalleryCategoryManager;
   ParentCategory: IOTAGalleryCategory;
@@ -112,21 +102,16 @@ begin
   begin
     ParentCategory := Manager.FindCategory(sCategoryCBuilderNew);
     if Assigned(ParentCategory) then
-      Result := Manager.AddCategory(ParentCategory, CategoryID,
-        CategoryCaption);
+      Result := Manager.AddCategory(ParentCategory, CategoryID, CategoryCaption);
   end
 end;
 
 procedure RemoveCategory(Category: IOTAGalleryCategory);
-var
-  Manager: IOTAGalleryCategoryManager;
+var Manager: IOTAGalleryCategoryManager;
 begin
   Manager := BorlandIDEServices as IOTAGalleryCategoryManager;
-  if Assigned(Manager) then
-  begin
-    if Assigned(Category) then
-      Manager.DeleteCategory(Category)
-  end
+  if Assigned(Manager) and Assigned(Category) then
+    Manager.DeleteCategory(Category)
 end;
 
 constructor TBaseCreatorFile.Create;
@@ -144,8 +129,7 @@ begin
   Result := ''
 end;
 
-constructor TModuleCreatorFile.Create(const ModuleIdent, FormIdent,
-  AncestorIdent: string);
+constructor TModuleCreatorSourceFile.Create(const ModuleIdent, FormIdent, AncestorIdent: string);
 begin
   FAge := -1;
   FModuleIdent := ModuleIdent;
@@ -153,7 +137,7 @@ begin
   FAncestorIdent := AncestorIdent;
 end;
 
-function TModuleCreatorFile.GetSource: String;
+function TModuleCreatorSourceFile.GetSource: String;
 begin
   if FModuleIdent <> '' then
     Result := StringReplace(Result, '<UNITNAME>', FModuleIdent, [rfReplaceAll, rfIgnoreCase]);
@@ -187,9 +171,9 @@ begin
   Result := '';
 end;
 
-function TBaseCreatorModule.GetImplFile: TModuleCreatorFileClass;
+function TBaseCreatorModule.GetImplFile: TModuleCreatorSourceFileClass;
 begin
-  Result := TModuleCreatorFile;
+  Result := TModuleCreatorSourceFile;
 end;
 
 function TBaseCreatorModule.GetImplFileName: string;
@@ -202,14 +186,14 @@ begin
   Result := '';
 end;
 
-function TBaseCreatorModule.GetIntfFile: TModuleCreatorFileClass;
+function TBaseCreatorModule.GetIntfFile: TModuleCreatorSourceFileClass;
 begin
-  Result := TModuleCreatorFile;
+  Result := TModuleCreatorSourceFile;
 end;
 
 function TBaseCreatorModule.GetMainForm: Boolean;
 begin
-  Result := True;
+  Result := False;
 end;
 
 function TBaseCreatorModule.GetOwner: IOTAModule;
@@ -232,26 +216,21 @@ begin
   Result := True; // Project needs to be named/saved
 end;
 
-function TBaseCreatorModule.NewFormFile(const FormIdent, AncestorIdent: string)
-  : IOTAFile;
+function TBaseCreatorModule.NewFormFile(const FormIdent, AncestorIdent: string): IOTAFile;
 begin
   Result := nil;
 end;
 
-function TBaseCreatorModule.NewImplSource(const ModuleIdent, FormIdent,
-  AncestorIdent: string): IOTAFile;
+function TBaseCreatorModule.NewImplSource(const ModuleIdent, FormIdent, AncestorIdent: string): IOTAFile;
 begin
   Result := nil;
   if GetImplFile <> nil then
     Result := GetImplFile.Create(ModuleIdent, FormIdent, AncestorIdent);
 end;
 
-function TBaseCreatorModule.NewIntfSource(const ModuleIdent, FormIdent,
-  AncestorIdent: string): IOTAFile;
+function TBaseCreatorModule.NewIntfSource(const ModuleIdent, FormIdent, AncestorIdent: string): IOTAFile;
 begin
   Result := nil;
-  if GetIntfFile <> nil then
-    Result := GetIntfFile.Create(ModuleIdent, FormIdent, AncestorIdent);
 end;
 
 function TFormCreatorModule.GetAncestorName: string;
@@ -262,16 +241,6 @@ end;
 function TFormCreatorModule.GetCreatorType: string;
 begin
   Result := sForm;
-end;
-
-function TDataModuleCreatorModule.GetAncestorName: string;
-begin
-  Result := 'TDataModule';
-end;
-
-function TFrameCreatorModule.GetAncestorName: string;
-begin
-  Result := 'TFrame';
 end;
 
 end.
