@@ -6,6 +6,7 @@ The most open-source business ERP software.
 https://www.lucidchart.com/documents/view/1bd9b8fe-c4d2-4095-ac9d-789bda97898b/0
 
 ---------------------------------------------
+
 Gerenciador de plug-ins
 1. Este sub-sistema é o principal e mais importante sub-sistema do OpenBusiness.
     Na execução do sistema o gerenciador de plug-ins é automaticamente ativado.
